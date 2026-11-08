@@ -1,0 +1,28 @@
+# Ambientes
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Relatorios gerados (nunca versionar resultado de scan)
+scan_report_*
+scan_*.txt
+scan_*.json
+scan_*.html
+scan_*.md
+scan_*.sarif.json
+relatorios/
+saida/
+
+# Config local
+.env
+*.log
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
