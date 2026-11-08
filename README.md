@@ -46,6 +46,9 @@ Sem instalar nada, também dá para rodar com `python -m secscan`.
 
 ## Uso
 
+Rodar `secscan` **sem argumento** abre um menu interativo colorido. Para uso
+direto / automação, os subcomandos:
+
 ```bash
 # auditoria padrão (passivo + ativo), saída JSON no stdout
 secscan scan https://meusite.com
