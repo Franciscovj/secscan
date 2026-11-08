@@ -83,7 +83,7 @@ secscan scan https://site.com --sem-interacao --silencioso --format json
 | `--falhar-se-achar` | codigo de saida 1 se houver achado alto/critico (bom p/ CI) |
 
 ### Outros comandos
-- `secscan checks` — lista os 23 checks, por categoria (passivo/ativo/intrusivo).
+- `secscan checks` — lista os 24 checks, por categoria (passivo/ativo/intrusivo).
 - `secscan selftest` — auto-teste: sobe um alvo de mentira local e confirma que
   os checks disparam. Nao bate em site real. Bom para validar a instalacao.
 - `secscan` (sem argumento) — abre um menu interativo colorido (use so quando ha
@@ -123,13 +123,14 @@ Ao reportar para o usuario:
    nao como certeza.
 4. Nao invente achados: reporte so o que esta no JSON.
 
-## Os 23 checks
+## Os 24 checks
 
 - **passivo** (so observa): `headers`, `cookies`, `cors`, `tls`, `csp_audit`,
   `info_disclosure`
 - **ativo** (sonda caminhos/parametros): `sensitive_paths`, `git_exposure`,
   `directory_listing`, `open_redirect`, `backup_files`, `admin_panel`,
-  `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`
+  `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`,
+  `db_exposure` (MongoDB/Redis/Elasticsearch/CouchDB/Memcached sem auth)
 - **intrusivo** (envia payloads — exige `--autorizo`): `sql_injection`, `xss`,
   `traversal`, `weak_login`, `ssrf`, `xxe`
 

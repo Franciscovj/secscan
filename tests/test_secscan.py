@@ -42,10 +42,11 @@ class TestRegistro(unittest.TestCase):
 
         esperados = {
             "admin_panel", "backup_files", "cookies", "cors", "csp_audit",
-            "csrf", "debug_mode", "directory_listing", "git_exposure",
-            "headers", "http_methods", "info_disclosure", "open_redirect",
-            "port_scan", "sensitive_paths", "sql_injection", "ssrf",
-            "subdomain_enum", "tls", "traversal", "weak_login", "xss", "xxe",
+            "csrf", "db_exposure", "debug_mode", "directory_listing",
+            "git_exposure", "headers", "http_methods", "info_disclosure",
+            "open_redirect", "port_scan", "sensitive_paths", "sql_injection",
+            "ssrf", "subdomain_enum", "tls", "traversal", "weak_login",
+            "xss", "xxe",
         }
         self.assertEqual(set(todos().keys()), esperados)
 

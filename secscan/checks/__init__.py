@@ -11,6 +11,7 @@ from . import (  # noqa: F401
     cors,
     csp_audit,
     csrf,
+    db_exposure,
     debug_mode,
     directory_listing,
     git_exposure,

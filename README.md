@@ -94,7 +94,8 @@ Organizados por quão invasivos são:
   `info_disclosure`
 - **ativo** (sonda caminhos/params): `sensitive_paths`, `git_exposure`,
   `directory_listing`, `open_redirect`, `backup_files`, `admin_panel`,
-  `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`
+  `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`,
+  `db_exposure`
 - **intrusivo** (envia payloads — exige autorização): `sql_injection`, `xss`,
   `traversal`, `weak_login`, `ssrf`, `xxe`
 
