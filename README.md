@@ -1,5 +1,9 @@
 # secscan
 
+[![ci](https://github.com/Franciscovj/secscan/actions/workflows/ci.yml/badge.svg)](https://github.com/Franciscovj/secscan/actions/workflows/ci.yml)
+![python](https://img.shields.io/badge/python-3.9%2B-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+
 Ferramenta de auditoria de segurança web em linha de comando — transforma uma
 gravação de alvo em um relatório estruturado de achados (severidade, confiança,
 evidência, remediação e CWE/OWASP por item).
@@ -72,10 +76,11 @@ secscan selftest
 
 Organizados por quão invasivos são:
 
-- **passivo** (só observa): `headers`, `cookies`, `cors`, `tls`
+- **passivo** (só observa): `headers`, `cookies`, `cors`, `tls`, `csp_audit`,
+  `info_disclosure`
 - **ativo** (sonda caminhos/params): `sensitive_paths`, `git_exposure`,
   `directory_listing`, `open_redirect`, `backup_files`, `admin_panel`,
-  `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`
+  `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`
 - **intrusivo** (envia payloads — exige autorização): `sql_injection`, `xss`,
   `traversal`, `weak_login`, `ssrf`, `xxe`
 

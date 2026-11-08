@@ -41,11 +41,11 @@ class TestRegistro(unittest.TestCase):
         import secscan.checks  # noqa: F401  (registra tudo)
 
         esperados = {
-            "admin_panel", "backup_files", "cookies", "cors", "csrf",
-            "debug_mode", "directory_listing", "git_exposure", "headers",
-            "open_redirect", "port_scan", "sensitive_paths", "sql_injection",
-            "ssrf", "subdomain_enum", "tls", "traversal", "weak_login",
-            "xss", "xxe",
+            "admin_panel", "backup_files", "cookies", "cors", "csp_audit",
+            "csrf", "debug_mode", "directory_listing", "git_exposure",
+            "headers", "http_methods", "info_disclosure", "open_redirect",
+            "port_scan", "sensitive_paths", "sql_injection", "ssrf",
+            "subdomain_enum", "tls", "traversal", "weak_login", "xss", "xxe",
         }
         self.assertEqual(set(todos().keys()), esperados)
 

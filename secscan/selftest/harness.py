@@ -73,11 +73,17 @@ class _Handler(BaseHTTPRequestHandler):
             corpo = (
                 "<html><body><h1>App de teste</h1>"
                 f"<div>busca: {refletido}</div>"
+                "<!-- contato: suporte@exemplo-interno.local -->"  # info disclosure
                 "<form method='post' action='/login'>"
                 "<input name='username'><input name='password' type='password'>"
                 "</form></body></html>"
             ).encode()
-            self._send(body=corpo, headers={"Set-Cookie": "sid=abc123; Path=/"})
+            self._send(body=corpo, headers={
+                "Set-Cookie": "sid=abc123; Path=/",
+                # CSP fraca de proposito (unsafe-inline/eval + wildcard)
+                "Content-Security-Policy":
+                    "default-src *; script-src 'unsafe-inline' 'unsafe-eval' *",
+            })
             return
 
         # Falha: /.env acessivel
@@ -131,6 +137,11 @@ class _Handler(BaseHTTPRequestHandler):
 
         self._send(code=404, body=b"<html><body>nao encontrado</body></html>")
 
+    def do_OPTIONS(self):
+        # Falha: expoe metodos perigosos (TRACE habilitado -> XST)
+        self._send(code=200, body=b"",
+                   headers={"Allow": "GET, POST, OPTIONS, TRACE, PUT"})
+
     def do_POST(self):
         tam = int(self.headers.get("Content-Length", 0) or 0)
         corpo = self.rfile.read(tam) if tam else b""
@@ -176,6 +187,9 @@ ESPERADOS = {
     "sql_injection",
     "ssrf",
     "xxe",
+    "http_methods",
+    "csp_audit",
+    "info_disclosure",
 }
 
 
