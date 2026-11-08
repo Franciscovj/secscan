@@ -8,6 +8,8 @@ Ferramenta de auditoria de segurança web em linha de comando — transforma uma
 gravação de alvo em um relatório estruturado de achados (severidade, confiança,
 evidência, remediação e CWE/OWASP por item).
 
+![secscan na linha de comando](docs/demo.svg)
+
 > ⚠️ **Uso autorizado apenas.** Rode o secscan **somente** em sistemas que você
 > possui ou para os quais tem permissão **escrita**. Os checks intrusivos
 > (injeção, força bruta) só rodam em alvos locais/privados ou com `--autorizo`.
@@ -121,6 +123,13 @@ inclua o import em `checks/__init__.py`.
 python -m pytest          # ou: python -m unittest
 secscan selftest          # auto-teste de ponta a ponta
 ```
+
+## Skill para IA (Claude Code e afins)
+
+Em [`skill/secscan/SKILL.md`](skill/secscan/SKILL.md) há uma *skill* que ensina
+qualquer IA a operar o `secscan` — instalação, comandos, perfis, a regra de
+autorização e como ler o JSON. Para usar no Claude Code, copie a pasta para
+`~/.claude/skills/secscan/` (vale em qualquer projeto).
 
 ## Licença
 
