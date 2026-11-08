@@ -25,18 +25,44 @@ real e sem gasto manual.
 
 ## Instalação
 
-Instale direto do repositório — não precisa de PyPI:
+Não precisa de PyPI — instala direto do repositório. Funciona igual no **Windows, Linux e macOS**.
+
+### Recomendado: pipx (deixa o `secscan` no PATH)
+
+O [pipx](https://pipx.pypa.io) instala a ferramenta isolada (sem sujar o seu Python)
+e cria o atalho numa pasta que já fica no PATH (`~/.local/bin` nos três sistemas):
+
+```bash
+pipx install git+https://github.com/Franciscovj/secscan.git
+pipx ensurepath          # garante ~/.local/bin no PATH — abra um terminal novo depois
+```
+
+Não tem pipx? Instale uma vez: `python -m pip install --user pipx`
+(no Windows, se `python` não existir, use `py -m pip install --user pipx`).
+
+Depois disso, `secscan` roda de qualquer terminal. (Requer `git` instalado.)
+
+### Alternativa: pip
 
 ```bash
 pip install git+https://github.com/Franciscovj/secscan.git
 ```
 
-Isso instala o comando `secscan` na sua máquina. (Requer `git` instalado.)
+Instala o comando `secscan`, mas ele só fica no PATH se o diretório de scripts do seu
+Python já estiver no PATH (o pip avisa quando não está). Por isso o pipx é mais simples.
 
-Ou clone e instale em modo editável, para desenvolver:
+### Desenvolvimento (editável)
+
+Para mexer no código e ver o efeito na hora. Com pipx, fica editável **e** no PATH:
 
 ```bash
 git clone https://github.com/Franciscovj/secscan.git
+pipx install -e ./secscan          # editável + no PATH (recomendado p/ dev)
+```
+
+Ou com venv, à moda antiga:
+
+```bash
 cd secscan
 python -m venv venv
 # Windows:  .\venv\Scripts\activate
@@ -45,6 +71,10 @@ pip install -e ".[dev]"
 ```
 
 Sem instalar nada, também dá para rodar com `python -m secscan`.
+
+> Onde os relatórios caem: rodando do código-fonte (clone/editável), em `<projeto>/relatorios`;
+> instalado normal (pipx/pip), em `~/secscan-relatorios`. Vale para os três sistemas — os caminhos
+> são resolvidos de forma portável, sem nada fixo de Windows.
 
 ## Uso
 
