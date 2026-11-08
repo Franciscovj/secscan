@@ -21,9 +21,24 @@ import argparse
 import os
 import sys
 
-#: pasta fixa onde os relatorios caem quando o usuario nao passa -o.
-#: sempre a mesma, nao importa de onde o comando foi rodado.
-DIR_PADRAO = os.path.join(os.path.expanduser("~"), "secscan-relatorios")
+def _dir_padrao() -> str:
+    """Pasta fixa onde os relatorios caem quando o usuario nao passa -o.
+
+    Sempre a mesma, nao importa de onde o comando foi rodado:
+      - rodando do codigo-fonte (dev/checkout editavel): <raiz-do-projeto>/relatorios,
+        junto do projeto, detectado por pyproject.toml/.git na raiz;
+      - instalado normal (pip, dentro de site-packages): ~/secscan-relatorios,
+        pois ai nao existe "pasta do projeto" para escrever.
+    """
+    raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if os.path.exists(os.path.join(raiz, "pyproject.toml")) or \
+       os.path.isdir(os.path.join(raiz, ".git")):
+        return os.path.join(raiz, "relatorios")
+    return os.path.join(os.path.expanduser("~"), "secscan-relatorios")
+
+
+#: resolvido uma vez no import (ver _dir_padrao).
+DIR_PADRAO = _dir_padrao()
 
 from . import __version__
 from . import ui
