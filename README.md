@@ -23,17 +23,26 @@ real e sem gasto manual.
 
 ## Instalação
 
+Instale direto do repositório — não precisa de PyPI:
+
+```bash
+pip install git+https://github.com/Franciscovj/secscan.git
+```
+
+Isso instala o comando `secscan` na sua máquina. (Requer `git` instalado.)
+
+Ou clone e instale em modo editável, para desenvolver:
+
 ```bash
 git clone https://github.com/Franciscovj/secscan.git
-cd scanner
+cd secscan
 python -m venv venv
 # Windows:  .\venv\Scripts\activate
 # Linux/macOS:  source venv/bin/activate
-pip install -e .
+pip install -e ".[dev]"
 ```
 
-Isso instala o comando `secscan`. (Sem instalar, dá para rodar com
-`python -m secscan`.)
+Sem instalar nada, também dá para rodar com `python -m secscan`.
 
 ## Uso
 
