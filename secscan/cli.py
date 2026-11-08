@@ -18,7 +18,12 @@ Exemplos:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
+
+#: pasta fixa onde os relatorios caem quando o usuario nao passa -o.
+#: sempre a mesma, nao importa de onde o comando foi rodado.
+DIR_PADRAO = os.path.join(os.path.expanduser("~"), "secscan-relatorios")
 
 from . import __version__
 from . import ui
@@ -147,14 +152,33 @@ def _cmd_scan(args) -> int:
     result = runner.executar(only=only, skip=skip)
     http.fechar()
 
-    formatos = [args.format] if args.format != "all" else list(FORMATOS)
+    # Para onde vai o relatorio:
+    #  - com -o: a pasta que o usuario pediu;
+    #  - sem -o, rodando num terminal (humano): SEMPRE a pasta fixa DIR_PADRAO,
+    #    nao importa de onde o comando foi chamado;
+    #  - sem -o, em pipe (outra ferramenta/IA lendo): imprime no stdout.
     if args.output:
-        for fmt in formatos:
-            caminho = salvar(result, fmt, args.output)
-            print(est.c(f"[OK] {fmt}: {caminho}", "verde"), file=sys.stderr)
+        destino_dir = args.output
+    elif sys.stdout.isatty():
+        destino_dir = DIR_PADRAO
     else:
-        # sem -o: stdout recebe o relatorio puro (sem cor), util p/ pipe e IA
-        print(gerar(result, formatos[0]))
+        destino_dir = None
+
+    if args.format and args.format != "all":
+        formatos = [args.format]
+    elif args.format == "all":
+        formatos = list(FORMATOS)
+    else:
+        formatos = None  # decidido pelo destino abaixo
+
+    if destino_dir:
+        for fmt in (formatos or ["html"]):  # arquivo p/ humano: HTML por padrao
+            caminho = salvar(result, fmt, destino_dir)
+            print(est.c(f"[OK] relatorio salvo: {caminho}", "verde", "bold"),
+                  file=sys.stderr)
+    else:
+        # pipe/IA: relatorio puro no stdout (JSON por padrao)
+        print(gerar(result, (formatos or ["json"])[0]))
 
     r = result.resumo()
     print(ui.regua(est), file=sys.stderr)
@@ -259,7 +283,9 @@ def construir_parser() -> argparse.ArgumentParser:
     s.add_argument("--skip", help="pular estes checks")
     s.add_argument("--perfil", choices=list(PERFIS), default="padrao",
                    help="rapido=passivo, padrao=+ativo, completo=+intrusivo")
-    s.add_argument("--format", choices=list(FORMATOS) + ["all"], default="json")
+    s.add_argument("--format", choices=list(FORMATOS) + ["all"], default=None,
+                   help="formato (padrao: html quando salva em arquivo, "
+                   "json quando sai em pipe)")
     s.add_argument("-o", "--output", help="diretorio de saida (salva arquivo)")
     s.add_argument("--threads", type=int, default=8)
     s.add_argument("--timeout", type=float, default=10.0)
