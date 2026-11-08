@@ -122,6 +122,14 @@ def _cmd_scan(args) -> int:
             proxy=args.proxy,
         )
     )
+    opcoes = {}
+    if getattr(args, "users", None):
+        opcoes["usuarios_arquivo"] = args.users
+    if getattr(args, "passwords", None):
+        opcoes["senhas_arquivo"] = args.passwords
+    if getattr(args, "max_tentativas", None):
+        opcoes["max_tentativas"] = args.max_tentativas
+
     runner = Runner(
         target,
         http,
@@ -129,6 +137,7 @@ def _cmd_scan(args) -> int:
         threads=args.threads,
         autorizo=args.autorizo,
         interativo=not args.sem_interacao,
+        opcoes=opcoes,
     )
 
     if not args.silencioso:
@@ -222,7 +231,8 @@ def _menu() -> int:
                 output=None, threads=8, timeout=10.0, rate=10.0, proxy=None,
                 user_agent=HttpConfig().user_agent, sem_tls=False,
                 autorizo=autorizo, sem_interacao=False, silencioso=False,
-                falhar_se_achar=False,
+                falhar_se_achar=False, users=None, passwords=None,
+                max_tentativas=None,
             )
             _cmd_scan(args)
         elif esc == "2":
@@ -259,6 +269,13 @@ def construir_parser() -> argparse.ArgumentParser:
     s.add_argument("--user-agent", default=HttpConfig().user_agent)
     s.add_argument("--sem-tls", action="store_true",
                    help="nao verificar certificado TLS")
+    s.add_argument("--users", help="arquivo de usuarios para login_bruteforce "
+                   "(uma por linha; ex.: wordlist do SecLists)")
+    s.add_argument("--passwords", help="arquivo de senhas para login_bruteforce "
+                   "(uma por linha; ex.: rockyou.txt do SecLists)")
+    s.add_argument("--max-tentativas", type=int, dest="max_tentativas",
+                   help="teto de tentativas do login_bruteforce (so vale com "
+                   "--autorizo; padrao conservador)")
     s.add_argument("--autorizo", action="store_true",
                    help="confirmo que tenho permissao para testar este alvo")
     s.add_argument("--sem-interacao", action="store_true",

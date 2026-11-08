@@ -55,6 +55,7 @@ class Runner:
         threads: int = 8,
         autorizo: bool = False,
         interativo: bool = True,
+        opcoes: dict | None = None,
     ) -> None:
         self.target = target
         self.http = http
@@ -62,6 +63,8 @@ class Runner:
         self.threads = max(1, threads)
         self.autorizo = autorizo
         self.interativo = interativo
+        #: config extra repassada a cada check (wordlists, max_tentativas...)
+        self.opcoes = opcoes or {}
 
     def _permitido_intrusivo(self) -> tuple[bool, str]:
         try:
@@ -92,7 +95,8 @@ class Runner:
 
         def _roda(meta: CheckMeta) -> tuple[str, list[Finding], str | None]:
             try:
-                check = meta.fabrica(self.target, self.http, self.on_log)
+                check = meta.fabrica(self.target, self.http, self.on_log,
+                                     self.opcoes)
                 self.on_log(f"[+] {meta.id} ({meta.categoria.value})")
                 achados = check.executar() or []
                 return meta.id, achados, None

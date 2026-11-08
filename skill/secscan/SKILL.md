@@ -76,6 +76,8 @@ secscan scan https://site.com --sem-interacao --silencioso --format json
 | `-o, --output DIR` | salva arquivo(s) nessa pasta (senao, imprime no stdout) |
 | `--autorizo` | confirma permissao; libera os checks intrusivos |
 | `--sem-interacao` | nunca pergunta (CI); sem `--autorizo`, pula intrusivos |
+| `--users FILE` / `--passwords FILE` | wordlists do `login_bruteforce` (ex.: SecLists/rockyou) |
+| `--max-tentativas N` | teto de tentativas do `login_bruteforce` (so com `--autorizo`) |
 | `--rate N` | limite de requisicoes por segundo (padrao 10; 0 = sem limite) |
 | `--threads N` / `--timeout S` | paralelismo / timeout por requisicao |
 | `--proxy URL` | passa por um proxy (ex.: Burp em `http://127.0.0.1:8080`) |
@@ -132,7 +134,7 @@ Ao reportar para o usuario:
   `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`,
   `db_exposure` (MongoDB/Redis/Elasticsearch/CouchDB/Memcached sem auth)
 - **intrusivo** (envia payloads — exige `--autorizo`): `sql_injection`, `xss`,
-  `traversal`, `weak_login`, `ssrf`, `xxe`
+  `traversal`, `login_bruteforce`, `ssrf`, `xxe`
 
 ## Fluxo recomendado
 

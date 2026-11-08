@@ -80,6 +80,8 @@ secscan selftest
 | `--format txt\|json\|html\|md\|sarif\|all` | formato do relatório (JSON é o padrão) |
 | `-o, --output DIR` | salva em arquivo(s) nessa pasta (senão, imprime no stdout) |
 | `--autorizo` | confirma que você tem permissão (libera os intrusivos) |
+| `--users FILE` / `--passwords FILE` | wordlists do `login_bruteforce` (ex.: SecLists) |
+| `--max-tentativas N` | teto de tentativas do `login_bruteforce` (só com `--autorizo`) |
 | `--rate N` | limite de requisições por segundo (padrão 10; 0 = sem limite) |
 | `--threads N` / `--timeout S` | paralelismo / timeout por requisição |
 | `--proxy URL` | passa por um proxy (ex.: Burp em `http://127.0.0.1:8080`) |
@@ -97,9 +99,28 @@ Organizados por quão invasivos são:
   `debug_mode`, `csrf`, `port_scan`, `subdomain_enum`, `http_methods`,
   `db_exposure`
 - **intrusivo** (envia payloads — exige autorização): `sql_injection`, `xss`,
-  `traversal`, `weak_login`, `ssrf`, `xxe`
+  `traversal`, `login_bruteforce`, `ssrf`, `xxe`
 
 `secscan checks` lista todos com a categoria.
+
+## Wordlists (login_bruteforce)
+
+O `login_bruteforce` traz listas de usuários e senhas comuns embutidas (curadas +
+top do [SecLists](https://github.com/danielmiessler/SecLists)), suficientes para
+pegar credenciais óbvias. Para ir fundo no **seu** alvo, aponte listas maiores:
+
+```bash
+# baixe o SecLists uma vez
+git clone --depth 1 https://github.com/danielmiessler/SecLists.git
+
+secscan scan https://meu-app.com --only login_bruteforce --autorizo \
+  --users SecLists/Usernames/top-usernames-shortlist.txt \
+  --passwords SecLists/Passwords/Common-Credentials/10k-most-common.txt \
+  --max-tentativas 2000
+```
+
+O teto (`--max-tentativas`) começa conservador de propósito; aumente-o só em alvo
+seu ou com permissão escrita — força bruta sem autorização é ilegal.
 
 ## Arquitetura
 

@@ -18,6 +18,7 @@ from . import (  # noqa: F401
     headers,
     http_methods,
     info_disclosure,
+    login_bruteforce,
     open_redirect,
     port_scan,
     sensitive_paths,
@@ -26,7 +27,6 @@ from . import (  # noqa: F401
     subdomain_enum,
     tls,
     traversal,
-    weak_login,
     xss,
     xxe,
 )

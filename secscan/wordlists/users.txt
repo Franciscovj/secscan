@@ -10,16 +10,12 @@ manager
 superuser
 webadmin
 sysadmin
-login
 support
 staff
 dev
 operator
-master
 backup
 default
-admin1
-adminadmin
 tomcat
 oracle
 postgres

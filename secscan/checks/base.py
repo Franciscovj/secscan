@@ -24,10 +24,13 @@ class Check:
         target: Target,
         http: HttpClient,
         on_log: Callable[[str], None] | None = None,
+        opcoes: dict | None = None,
     ) -> None:
         self.target = target
         self.http = http
         self._on_log = on_log
+        #: configuracao extra vinda da CLI (ex.: wordlists, max_tentativas)
+        self.opcoes = opcoes or {}
 
     # ---- helpers ----------------------------------------------------------
     def log(self, msg: str) -> None:

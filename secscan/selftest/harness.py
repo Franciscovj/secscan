@@ -154,6 +154,19 @@ class _Handler(BaseHTTPRequestHandler):
             self._send(body=expandido.encode(), ctype="application/xml")
             return
 
+        # Falha: login aceita credencial fraca (admin/password) de proposito
+        if urlparse(self.path).path == "/login":
+            dados = parse_qs(corpo.decode("utf-8", "replace"))
+            user = dados.get("username", [""])[0]
+            senha = dados.get("password", [""])[0]
+            if user == "admin" and senha == "password":
+                self._send(code=302, body=b"",
+                           headers={"Location": "/painel",
+                                    "Set-Cookie": "session=logado; Path=/"})
+                return
+            self._send(code=401, body=b"<html><body>senha incorreta</body></html>")
+            return
+
         self._send(code=401, body=b"<html><body>nao autorizado</body></html>")
 
 
@@ -190,6 +203,7 @@ ESPERADOS = {
     "http_methods",
     "csp_audit",
     "info_disclosure",
+    "login_bruteforce",
 }
 
 
