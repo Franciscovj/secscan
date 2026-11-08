@@ -73,11 +73,37 @@ class Runner:
         except AutorizacaoNegada as e:
             return False, str(e)
 
+    def _calibrar_catchall(self) -> dict | None:
+        """Aprende a 'cara do nao-existe'.
+
+        Muitos sites (SPAs, catch-all) respondem a QUALQUER caminho com a mesma
+        pagina (200), o que engana checks que procuram arquivos por caminho. Aqui
+        pedimos caminhos aleatorios: se vierem iguais e 200, guardamos essa
+        assinatura (status + tamanho) para os checks ignorarem o que bater com ela.
+        """
+        import secrets
+        assinaturas = []
+        for _ in range(2):
+            alvo = self.target.caminho("/secscan-" + secrets.token_hex(8))
+            try:
+                r = self.http.get(alvo)
+                assinaturas.append((r.status_code, len(r.content or b"")))
+            except Exception:
+                return None
+        (s1, l1), (s2, l2) = assinaturas
+        if s1 == s2 == 200 and abs(l1 - l2) <= max(64, int(0.05 * max(l1, l2, 1))):
+            self.on_log(f"[i] alvo responde igual a caminhos inexistentes "
+                        f"(catch-all {s1}, ~{(l1 + l2) // 2}b) — calibrando")
+            return {"status": s1, "tamanho": (l1 + l2) // 2}
+        return None
+
     def executar(
         self, only: list[str] | None = None, skip: list[str] | None = None
     ) -> ScanResult:
         metas = selecionar(only, skip)
         inicio = time.time()
+        # calibra o catch-all uma vez e repassa a todos os checks via opcoes
+        self.opcoes.setdefault("catchall", self._calibrar_catchall())
         result = ScanResult(
             target=self.target.url,
             host=self.target.host,
@@ -85,7 +111,13 @@ class Runner:
             duracao_s=0.0,
         )
 
-        intrusivo_ok, motivo = self._permitido_intrusivo()
+        # so checa autorizacao se ha algum check intrusivo selecionado — nao faz
+        # sentido pedir permissao numa varredura leve (perfil rapido/padrao)
+        tem_intrusivo = any(m.categoria == Categoria.INTRUSIVO for m in metas)
+        if tem_intrusivo:
+            intrusivo_ok, motivo = self._permitido_intrusivo()
+        else:
+            intrusivo_ok, motivo = True, ""
         a_rodar: list[CheckMeta] = []
         for meta in metas:
             if meta.categoria == Categoria.INTRUSIVO and not intrusivo_ok:

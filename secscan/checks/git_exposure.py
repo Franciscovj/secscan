@@ -24,7 +24,8 @@ class GitExposureCheck(Check):
                 r = self.http.get(url)
             except Exception:
                 continue
-            if r.status_code == 200 and (marca == "" or marca in r.text[:200]):
+            if (r.status_code == 200 and not self.eh_catchall(r)
+                    and (marca == "" or marca in r.text[:200])):
                 achados.append(
                     self.achado(
                         title=f"Versionamento exposto: {caminho}",

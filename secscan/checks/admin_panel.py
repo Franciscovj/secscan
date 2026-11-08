@@ -73,7 +73,7 @@ class AdminPanelCheck(Check):
                     )
                 continue
 
-            if r.status_code == 200:
+            if r.status_code == 200 and not self.eh_catchall(r):
                 corpo = r.text.lower()
                 if any(p in corpo for p in PALAVRAS_LOGIN):
                     achados.append(

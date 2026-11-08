@@ -23,7 +23,7 @@ class DirectoryListingCheck(Check):
                 r = self.http.get(url)
             except Exception:
                 continue
-            if r.status_code == 200:
+            if r.status_code == 200 and not self.eh_catchall(r):
                 baixo = r.text.lower()
                 if any(m in baixo for m in MARCAS):
                     achados.append(

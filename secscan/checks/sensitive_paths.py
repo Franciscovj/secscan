@@ -34,7 +34,8 @@ class SensitivePathsCheck(Check):
                 r = self.http.get(url)
             except Exception:
                 continue
-            if r.status_code == 200 and r.content and not _parece_pagina_de_erro(r.text):
+            if (r.status_code == 200 and r.content and not self.eh_catchall(r)
+                    and not _parece_pagina_de_erro(r.text)):
                 achados.append(
                     self.achado(
                         title=f"Caminho sensivel acessivel: {caminho}",

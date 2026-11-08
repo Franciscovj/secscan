@@ -66,6 +66,19 @@ class Check:
             extra=extra or {},
         )
 
+    def eh_catchall(self, r) -> bool:
+        """True se a resposta e a 'pagina generica' que o alvo da para qualquer
+        caminho inexistente (calibrada pelo runner). Checks que sondam arquivos
+        por caminho usam isso para nao acusar um caminho que, na verdade, so
+        devolveu o mesmo conteudo de sempre."""
+        sig = self.opcoes.get("catchall")
+        if not sig:
+            return False
+        if r.status_code != sig["status"]:
+            return False
+        tam = len(r.content or b"")
+        return abs(tam - sig["tamanho"]) <= max(128, int(0.1 * sig["tamanho"]))
+
     # ---- contrato ---------------------------------------------------------
     def executar(self) -> list[Finding]:  # pragma: no cover - abstrato
         raise NotImplementedError

@@ -41,7 +41,7 @@ class BackupFilesCheck(Check):
                 r = self.http.get(url)
             except Exception:
                 continue
-            if r.status_code != 200:
+            if r.status_code != 200 or self.eh_catchall(r):
                 continue
             tamanho = len(r.content or b"")
             if tamanho <= 100:

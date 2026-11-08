@@ -21,7 +21,7 @@ except Exception:  # pragma: no cover
     Retry = None
 
 
-UA_PADRAO = "secscan/0.7 (+https://github.com/Franciscovj/secscan)"
+UA_PADRAO = "secscan/0.8 (+https://github.com/Franciscovj/secscan)"
 
 
 class _RateLimiter:
